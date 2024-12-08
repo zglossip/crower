@@ -1,0 +1,17 @@
+type Event {
+    id: ID!
+    description: String
+    startTime: Int
+    endDate: Int
+    date: String
+}
+
+type Query {
+    searchEventsByDate(date: String!): [Event!]!
+}
+
+type Mutation {
+    createEvent(description: String, startTime: Int, endTime: Int, date: String): Event
+    updateEvent(id: ID!, description: String, startTime: Int, endTime: Int, date: String): Event
+    deleteEvent(id: ID!): Boolean
+}
