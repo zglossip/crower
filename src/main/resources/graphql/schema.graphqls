@@ -1,9 +1,9 @@
 type Event {
     id: ID!
-    description: String
-    startTime: Int
-    endDate: Int
-    date: String
+    description: String!
+    startTime: Int!
+    endDate: Int!
+    date: String!
 }
 
 type Query {
@@ -11,6 +11,6 @@ type Query {
 }
 
 type Mutation {
-    upsertEvent(id: ID!, description: String, startTime: Int, endTime: Int, date: String): Event
+    upsertEvent(id: ID, description: String!, startTime: Int!, endTime: Int!, date: String!): Event
     deleteEvent(id: ID!): Boolean
 }
