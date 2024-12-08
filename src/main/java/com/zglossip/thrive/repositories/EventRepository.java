@@ -30,7 +30,7 @@ public class EventRepository {
     }
 
     public Event upsertEvent(Event event) {
-        if(Objects.isNull(event.id())) {
+        if (Objects.isNull(event.id())) {
             Event newEvent = new Event(generateId().toString(), event.description(), event.startTime(), event.endTime(), event.date());
             eventStore.put(newEvent.id(), newEvent);
             return newEvent;
@@ -40,7 +40,7 @@ public class EventRepository {
         }
     }
 
-    public boolean deleteEvent(String id){
+    public boolean deleteEvent(String id) {
         eventStore.remove(id);
         return true;
     }
