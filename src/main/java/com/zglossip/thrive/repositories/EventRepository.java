@@ -35,11 +35,14 @@ public class EventRepository {
             eventStore.put(newEvent.id(), newEvent);
             return newEvent;
         } else {
-            //TODO update
+            eventStore.replace(event.id(), event);
             return event;
         }
     }
 
-    //TODO deleteEvent
+    public boolean deleteEvent(String id){
+        eventStore.remove(id);
+        return true;
+    }
 
 }
