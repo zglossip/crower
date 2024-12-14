@@ -1,48 +1,69 @@
 package com.zglossip.thrive.repositories;
 
 import com.zglossip.thrive.domains.Event;
+import com.zglossip.thrive.repositories.mappers.EventMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Repository
 public class EventRepository {
 
-    //TODO Replace with DB
-    private final Map<String, Event> eventStore = new HashMap<>();
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final EventMapper eventMapper;
 
-    //TODO Remove this after testing
-    private Integer generateId() {
-        Integer maxId = Collections.max(eventStore.keySet().stream().map(Integer::valueOf).collect(Collectors.toSet()));
-        return maxId + 1;
-    }
+  @Autowired
+  public EventRepository(NamedParameterJdbcTemplate jdbcTemplate, EventMapper eventMapper) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.eventMapper = eventMapper;
+  }
 
-    public List<Event> searchEventsByDate(LocalDate date) {
-        List<Event> result = new ArrayList<>();
-        for (Event event : eventStore.values()) {
-            if (event.date().equals(date)) {
-                result.add(event);
-            }
-        }
-        return result;
-    }
+  public List<Event> searchEventsByDate(LocalDate date) {
+    String sql = " SELECT id, description, start_time, end_time, date" +
+                 " FROM thrive.event" +
+                 " WHERE date = :date";
 
-    public Event upsertEvent(Event event) {
-        if (Objects.isNull(event.id())) {
-            Event newEvent = new Event(generateId().toString(), event.description(), event.startTime(), event.endTime(), event.date());
-            eventStore.put(newEvent.id(), newEvent);
-            return newEvent;
-        } else {
-            eventStore.replace(event.id(), event);
-            return event;
-        }
-    }
+    SqlParameterSource params = new MapSqlParameterSource("date", date);
 
-    public boolean deleteEvent(String id) {
-        eventStore.remove(id);
-        return true;
-    }
+    return jdbcTemplate.query(sql, params, eventMapper);
+  }
+
+  public Event upsertEvent(Event event) {
+    String sql = " INSERT INTO thrive.event (start_time, date, end_time, description)" +
+                 "   VALUES (:startTime, :date, :endTime, :description)" +
+                 " ON CONFLICT(start_time, date)" +
+                 "   DO UPDATE SET " +
+                 "     description = :description," +
+                 "     start_time = :startTime," +
+                 "     end_time = :endTime," +
+                 "     date = :date" +
+                 " RETURNING id";
+
+    SqlParameterSource params = new MapSqlParameterSource()
+        .addValue("description", event.description())
+        .addValue("startTime", event.startTime())
+        .addValue("endTime", event.endTime())
+        .addValue("date", event.date());
+
+    Integer id = jdbcTemplate.queryForObject(sql, params, Integer.class);
+
+    return new Event(
+        String.valueOf(id),
+        event.description(),
+        event.startTime(),
+        event.endTime(),
+        event.date()
+    );
+
+  }
+
+  public boolean deleteEvent(String id) {
+    return true;
+  }
 
 }
