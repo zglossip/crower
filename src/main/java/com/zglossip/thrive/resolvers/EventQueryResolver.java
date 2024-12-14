@@ -13,17 +13,17 @@ import java.util.List;
 @Controller
 public class EventQueryResolver {
 
-    private final EventService eventService;
+  private final EventService eventService;
 
-    @Autowired
-    public EventQueryResolver(EventService eventService) {
-        this.eventService = eventService;
-    }
+  @Autowired
+  public EventQueryResolver(EventService eventService) {
+    this.eventService = eventService;
+  }
 
-    @QueryMapping
-    public List<Event> searchEventsByDate(@Argument String date) {
-        LocalDate parsedDate = LocalDate.parse(date);
-        return eventService.searchEventsByDate(parsedDate);
-    }
+  @QueryMapping
+  public List<Event> searchEventsByDate(@Argument String date) {
+    LocalDate parsedDate = LocalDate.parse(date);
+    return eventService.searchEventsByDate(parsedDate);
+  }
 
 }

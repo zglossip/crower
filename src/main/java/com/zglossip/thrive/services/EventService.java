@@ -11,23 +11,23 @@ import java.util.List;
 @Service
 public class EventService {
 
-    private final EventRepository eventRepository;
+  private final EventRepository eventRepository;
 
-    @Autowired
-    public EventService(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
+  @Autowired
+  public EventService(EventRepository eventRepository) {
+    this.eventRepository = eventRepository;
+  }
 
-    public List<Event> searchEventsByDate(LocalDate date) {
-        return eventRepository.searchEventsByDate(date);
-    }
+  public List<Event> searchEventsByDate(LocalDate date) {
+    return eventRepository.searchEventsByDate(date);
+  }
 
-    public Event upsertEvent(Event event) {
-        return eventRepository.upsertEvent(event);
-    }
+  public Event upsertEvent(Event event) {
+    return eventRepository.upsertEvent(event);
+  }
 
-    public boolean deleteEvent(String id) {
-        return eventRepository.deleteEvent(id);
-    }
+  public boolean deleteEvent(String id) {
+    return eventRepository.deleteEvent(id);
+  }
 
 }

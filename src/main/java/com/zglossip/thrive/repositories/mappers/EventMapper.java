@@ -10,12 +10,12 @@ import java.sql.SQLException;
 @Component
 public class EventMapper implements RowMapper<Event> {
 
-    @Override
-    public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Event(rs.getString("id"),
-                rs.getString("description"),
-                rs.getInt("start_time"),
-                rs.getInt("end_teme"),
-                rs.getDate("date").toLocalDate());
-    }
+  @Override
+  public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
+    return new Event(rs.getString("id"),
+        rs.getString("description"),
+        rs.getInt("start_time"),
+        rs.getInt("end_time"),
+        rs.getDate("date").toLocalDate());
+  }
 }

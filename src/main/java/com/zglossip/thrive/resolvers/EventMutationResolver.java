@@ -12,33 +12,33 @@ import java.time.LocalDate;
 @Controller
 public class EventMutationResolver {
 
-    private final EventService eventService;
+  private final EventService eventService;
 
-    @Autowired
-    public EventMutationResolver(EventService eventService) {
-        this.eventService = eventService;
-    }
+  @Autowired
+  public EventMutationResolver(EventService eventService) {
+    this.eventService = eventService;
+  }
 
-    @MutationMapping
-    public Event upsertEvent(
-            @Argument String id,
-            @Argument String description,
-            @Argument Integer startTime,
-            @Argument Integer endTime,
-            @Argument String date
-    ) {
-        return eventService.upsertEvent(new Event(
-                id,
-                description,
-                startTime,
-                endTime,
-                LocalDate.parse(date)
-        ));
-    }
+  @MutationMapping
+  public Event upsertEvent(
+      @Argument String id,
+      @Argument String description,
+      @Argument Integer startTime,
+      @Argument Integer endTime,
+      @Argument String date
+  ) {
+    return eventService.upsertEvent(new Event(
+        id,
+        description,
+        startTime,
+        endTime,
+        LocalDate.parse(date)
+    ));
+  }
 
-    @MutationMapping
-    public boolean deleteEvent(@Argument String id) {
-        return eventService.deleteEvent(id);
-    }
+  @MutationMapping
+  public boolean deleteEvent(@Argument String id) {
+    return eventService.deleteEvent(id);
+  }
 
 }
