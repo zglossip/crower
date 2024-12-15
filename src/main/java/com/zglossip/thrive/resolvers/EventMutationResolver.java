@@ -25,14 +25,14 @@ public class EventMutationResolver {
       @Argument String description,
       @Argument Integer startTime,
       @Argument Integer endTime,
-      @Argument String date
+      @Argument String eventDate
   ) {
     return eventService.upsertEvent(new Event(
         id,
         description,
         startTime,
         endTime,
-        LocalDate.parse(date)
+        LocalDate.parse(eventDate)
     ));
   }
 

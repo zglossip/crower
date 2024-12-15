@@ -7,6 +7,6 @@ public record Event(
     String description,
     Integer startTime,
     Integer endTime,
-    LocalDate date
+    LocalDate eventDate
 ) {
 }

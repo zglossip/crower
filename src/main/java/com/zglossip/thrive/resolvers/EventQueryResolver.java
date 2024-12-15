@@ -21,8 +21,8 @@ public class EventQueryResolver {
   }
 
   @QueryMapping
-  public List<Event> searchEventsByDate(@Argument String date) {
-    LocalDate parsedDate = LocalDate.parse(date);
+  public List<Event> searchEventsByDate(@Argument String eventDate) {
+    LocalDate parsedDate = LocalDate.parse(eventDate);
     return eventService.searchEventsByDate(parsedDate);
   }
 

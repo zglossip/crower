@@ -16,6 +16,6 @@ public class EventMapper implements RowMapper<Event> {
         rs.getString("description"),
         rs.getInt("start_time"),
         rs.getInt("end_time"),
-        rs.getDate("date").toLocalDate());
+        rs.getDate("event_date").toLocalDate());
   }
 }

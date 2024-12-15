@@ -3,14 +3,14 @@ type Event {
     description: String!
     startTime: Int!
     endTime: Int!
-    date: String!
+    eventDate: String!
 }
 
 type Query {
-    searchEventsByDate(date: String!): [Event!]!
+    searchEventsByDate(eventDate: String!): [Event!]!
 }
 
 type Mutation {
-    upsertEvent(id: ID, description: String!, startTime: Int!, endTime: Int!, date: String!): Event
+    upsertEvent(id: ID, description: String!, startTime: Int!, endTime: Int!, eventDate: String!): Event
     deleteEvent(id: ID!): Boolean
 }

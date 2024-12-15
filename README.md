@@ -38,6 +38,30 @@ For reference, I include the following for a Postgres server:
 Once the WAR is running, you can navigate the API by going to `/graphiql` and following the instructions provided by the
 GraphQL UI.
 
+### Database
+
+This application will need to access a database with the following table:
+
+* schema: `thrive`
+* table: `event`
+
+#### Table Definition
+
+**Note:** This was made for Postgres. You may have to tailor this to your specific database.
+
+```sql
+CREATE TABLE IF NOT EXISTS thrive.event
+(
+    id bigint NOT NULL DEFAULT nextval('thrive.event_id_seq'::regclass),
+    start_time integer NOT NULL,
+    end_time integer NOT NULL,
+    date date NOT NULL,
+    description character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT event_pkey PRIMARY KEY (id),
+    CONSTRAINT st_unique UNIQUE (start_time, date)
+)
+```
+
 ## Releases
 
 N/A

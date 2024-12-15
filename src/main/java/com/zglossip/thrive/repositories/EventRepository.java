@@ -23,28 +23,28 @@ public class EventRepository {
     this.eventMapper = eventMapper;
   }
 
-  public List<Event> searchEventsByDate(LocalDate date) {
+  public List<Event> searchEventsByDate(LocalDate eventDate) {
     String sql = """
-        SELECT id, description, start_time, end_time, date
+        SELECT id, description, start_time, end_time, event_date
                  FROM thrive.event
-                 WHERE date = :date
+                 WHERE event_date = :eventDate
         """;
 
-    SqlParameterSource params = new MapSqlParameterSource("date", date);
+    SqlParameterSource params = new MapSqlParameterSource("eventDate", eventDate);
 
     return jdbcTemplate.query(sql, params, eventMapper);
   }
 
   public Event upsertEvent(Event event) {
     String sql = """
-            INSERT INTO thrive.event (start_time, "date", end_time, description)
-            VALUES (:startTime, :date, :endTime, :description)
-            ON CONFLICT (start_time, "date")
+            INSERT INTO thrive.event (start_time, event_date, end_time, description)
+            VALUES (:startTime, :eventDate, :endTime, :description)
+            ON CONFLICT (start_time, event_date)
             DO UPDATE SET
                 description = EXCLUDED.description,
                 start_time = EXCLUDED.start_time,
                 end_time = EXCLUDED.end_time,
-                "date" = EXCLUDED."date"
+                event_date = EXCLUDED.event_date
             RETURNING id
         """;
 
@@ -52,7 +52,7 @@ public class EventRepository {
         .addValue("description", event.description())
         .addValue("startTime", event.startTime())
         .addValue("endTime", event.endTime())
-        .addValue("date", event.date());
+        .addValue("eventDate", event.eventDate());
 
     Integer id = jdbcTemplate.queryForObject(sql, params, Integer.class);
 
@@ -62,7 +62,7 @@ public class EventRepository {
         event.description(),
         event.startTime(),
         event.endTime(),
-        event.date()
+        event.eventDate()
     );
 
   }
@@ -79,9 +79,9 @@ public class EventRepository {
 
   public List<Event> findOverlaps(Event event) {
     String sql = """
-        SELECT id, description, start_time, end_time, date
+        SELECT id, description, start_time, end_time, event_date
         FROM thrive.event
-        WHERE date = :date
+        WHERE event_date = :eventDate
           AND (
                 (:startTime > start_time AND :startTime < end_time)
                 OR (:endTime > start_time AND :endTime < end_time)
@@ -89,7 +89,7 @@ public class EventRepository {
         """;
 
     SqlParameterSource params = new MapSqlParameterSource()
-        .addValue("date", event.date())
+        .addValue("eventDate", event.eventDate())
         .addValue("startTime", event.startTime())
         .addValue("endTime", event.endTime());
 
