@@ -1,6 +1,7 @@
 package com.zglossip.thrive.services;
 
 import com.zglossip.thrive.domains.Event;
+import com.zglossip.thrive.exceptions.EventOverlapException;
 import com.zglossip.thrive.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,12 @@ public class EventService {
   }
 
   public Event upsertEvent(Event event) {
+    List<Event> overlaps = eventRepository.findOverlaps(event);
+
+    if (!overlaps.isEmpty()) {
+      throw new EventOverlapException(overlaps);
+    }
+
     return eventRepository.upsertEvent(event);
   }
 

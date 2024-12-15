@@ -35,7 +35,7 @@ public class EventRepository {
 
   public Event upsertEvent(Event event) {
     String sql = " INSERT INTO thrive.event (start_time, date, end_time, description)" +
-                 "   VALUES (:startTime, :date, :endTime, :description)" +
+                 " VALUES (:startTime, :date, :endTime, :description)" +
                  " ON CONFLICT(start_time, date)" +
                  "   DO UPDATE SET " +
                  "     description = :description," +
@@ -63,7 +63,30 @@ public class EventRepository {
   }
 
   public boolean deleteEvent(String id) {
+    String sql = "DELETE FROM thrive.event WHERE id = :id";
+
+    SqlParameterSource params = new MapSqlParameterSource("id", id);
+
+    jdbcTemplate.update(sql, params);
+
     return true;
+  }
+
+  public List<Event> findOverlaps(Event event) {
+    String sql = " SELECT id, description, start_time, end_time, date" +
+                 " FROM thrive.event" +
+                 " WHERE date = :date" +
+                 "   AND (" +
+                 "         (:startTime > start_time AND :startTime < end_time)" +
+                 "         OR (:endTime > start_time AND :endTime < end_time)" +
+                 "       )";
+
+    SqlParameterSource params = new MapSqlParameterSource()
+        .addValue("date", event.date())
+        .addValue("startTime", event.startTime())
+        .addValue("endTime", event.endTime());
+
+    return jdbcTemplate.query(sql, params, eventMapper);
   }
 
 }
