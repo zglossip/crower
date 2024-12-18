@@ -1,0 +1,21 @@
+mutation UpsertEvent(
+  $id: ID
+  $description: String!
+  $eventDate: String!
+  $startTime: Int!
+  $endTime: Int!
+) {
+  upsertEvent(
+    id: $id
+    description: $description
+    eventDate: $eventDate
+    startTime: $startTime
+    endTime: $endTime
+  ) {
+    id
+    description
+    eventDate
+    startTime
+    endTime
+  }
+}

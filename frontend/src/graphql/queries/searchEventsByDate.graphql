@@ -1,0 +1,6 @@
+query SearchEventsByDate($eventDate: String!) {
+  searchEventsByDate(eventDate: $eventDate) {
+    id
+    description
+  }
+}
